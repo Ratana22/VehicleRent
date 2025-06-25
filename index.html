@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Rental Landing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+SC:ital,wght@0,100..900;1,100..900&family=Battambang:wght@100;300;400;700;900&family=Dangrek&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanchenjunga:wght@400;500;600;700&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Preahvihear&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sigmar&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Receipt Modal -->
+  <div id="receipt-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" id="close-receipt-modal">&times;</span>
+      <h2 style="text-align:center;">Receipt</h2>
+      <div id="receipt-content" style="font-size:1.05em;line-height:1.7;"></div>
+      <div style="text-align:center;margin-top:18px;">
+        <button class="btn" id="close-receipt-btn" style="width:60%;">Download Receipt</button>
+      </div>
+    </div>
+  </div>
+  <!-- Pay Modal -->
+  <div id="pay-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" id="close-pay-modal">&times;</span>
+      <h2 style="text-align:center;">Cancel</h2>
+      <div style="margin-bottom:10px;">
+        <label>Price:</label>
+        <input type="text" id="pay-price" readonly style="width:90%;margin-top:6px;padding:8px;font-size:1.1em;font-weight:bold;">
+      </div>
+      <div style="text-align:center;">
+        <img id="qr-img" src="https://i.ibb.co/3YL7dRwC/photo-2025-05-12-22-36-00.jpg" alt="QR" style="width:180px;height:180px;border:1px solid #eee;border-radius:12px;">
+        <div style="margin-top:8px;font-size:1em;color:#6c63ff;">Scan QR For Pay</div>
+        <div style="margin-top:16px;">
+          <button class="btn" id="show-receipt-btn" style="width:60%;">Show Receipt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Detail Modal -->
+  <div id="detail-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal">&times;</span>
+      <h2 style="text-align:center;">Complete Information</h2>
+      <form id="detailForm" enctype="multipart/form-data">
+        <div style="display:flex; gap:10px;">
+          <input type="text" placeholder="First Name" name="first" required style="flex:1; padding: 10px;">
+          <input type="text" placeholder="Last Name" name="last" required style="flex:1;">
+        </div>
+        <input type="email" placeholder="Email" name="email" required style="width:95%;margin-top:10px; padding: 10px;">
+        <input type="tel" placeholder="Phone number" name="phone" required style="width:95%;margin-top:10px; padding: 10px;">
+        <div style="display:flex;align-items:center;margin-top:10px;gap:8px;">
+          <label for="upload" style="cursor:pointer;">
+            <i class="fas fa-folder-open"></i>
+          </label>
+          <input type="file" id="upload" name="upload" style="display:none;">
+          <span>Upload ID Card</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button type="button" class="btn" style="flex:1;">Male</button>
+          <button type="button" class="btn" style="flex:1;">Female</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <input type="date" name="date_take" required style="flex:1;padding:8px;" placeholder="Date Take">
+          <input type="date" name="date_expire" required style="flex:1;padding:8px;" placeholder="Date Expire">
+        </div>
+        <input type="text" id="vehicle-type-input" placeholder="Vehicle auto" name="vehicle" style="width:96%;margin-top:10px; padding: 8px;" readonly>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button type="button" class="btn" style="flex:1;">Cancel</button>
+          <button type="submit" class="btn" style="flex:1;background:#6c63ff;color:#fff;">Pay</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/2389/2389215.png" alt="logo"/>
+    </div>
+    <nav id="main-nav">
+      <button id="close-menu" style="display:none;position:absolute;top:18px;right:18px;background:none;border:none;font-size:2em;z-index:22;cursor:pointer;">
+        <i class="fas fa-times"></i>
+      </button>
+      <a href="#">Home</a>
+      <a href="#">Cars</a>
+      <a href="#">Pages</a>
+      <a href="#">News</a>
+      <a href="#">Contact Us</a>
+      <a href="#"><button type="button" class="btn-login"><i class="fa-solid fa-circle-user"></i> Login</button></a>
+     <button id="theme-switch" class="btn" style="width: 70px;display:flex;justify-content: center; align-items:center;gap:6px;">
+        <i class="fas fa-moon"></i>
+        <span id="theme-switch-label">Dark</span>
+      </button>
+      
+    </nav>
+    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+  </div>
+  <section class="hero">
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80" alt="car hero"/>
+      <div class="hero-content">
+        <h1>Find, book and<br>rent a car <span class="highlight">Easily</span></h1>
+        <p>Get a car wherever and whenever you need it with our Website.</p>
+      </div>
+    </div>
+  </section>
+  <section class="vehicle-group-section">
+    <h2>Select a vehicle group</h2>
+    <div class="vehicle-groups" id="vehicle-groups">
+      <button class="vehicle-group-btn active" data-group="all"><i class="fa fa-car"></i> All vehicles</button>
+      <button class="vehicle-group-btn" data-group="cabriolet"><i class="fa fa-car-side"></i> Cabriolet</button>
+      <button class="vehicle-group-btn" data-group="pickup"><i class="fa fa-truck-pickup"></i> Pickup</button>
+      <button class="vehicle-group-btn" data-group="suv"><i class="fa fa-car"></i> Suv</button>
+      <button class="vehicle-group-btn" data-group="moto"><i class="fa fa-motorcycle"></i> Moto</button>
+      <button class="vehicle-group-btn" data-group="van"><i class="fa fa-shuttle-van"></i> Van</button>
+    </div>
+    <div class="vehicle-cards" id="vehicle-cards"></div>
+  </section>
+  <section class="service-section">
+    <div class="service-box">
+      <h3><i class="fa fa-headset"></i> 24/7 Service</h3>
+      <p>We are always available for you, anytime, anywhere.</p>
+    </div>
+    <div class="service-box">
+      <h3><i class="fa fa-car-side"></i> Vehicle Types</h3>
+      <p>Choose from cars, motorbikes, and pickups for your needs.</p>
+    </div>
+    <div class="service-box">
+      <h3><i class="fa fa-calendar-check"></i> Booking</h3>
+      <p>Easy online booking with instant confirmation.</p>
+    </div>
+  </section>
+  <section class="rate-section">
+    <h2>Customer Ratings</h2>
+    <div class="rate-box">
+      <div class="rate-customer">
+        <strong>Nget Oudom</strong>
+        <div class="stars">★★★★★</div>
+        <p>Great service and clean cars!</p>
+      </div>
+      <div class="rate-customer">
+        <strong>Panf Sovvanith</strong>
+        <div class="stars">★★★★☆</div>
+        <p>Easy booking and friendly staff.</p>
+      </div>
+      <div class="rate-customer">
+        <strong>Heoun Ratana</strong>
+        <div class="stars">★★★★★</div>
+        <p>Highly recommend Car Rent!</p>
+      </div>
+    </div>
+  </section>
+  <div class="box-map" id="box-map">
+    <div class="map-header">
+      <span>Our Location</span>
+      <button id="map-fullscreen-btn"><i class="fas fa-expand"></i></button>
+    </div>
+    <div class="map-embed" id="map-embed">
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html?bbox=104.888%2C11.502%2C105.088%2C11.652&amp;layer=mapnik&amp;marker=11.562%2C104.917"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+  <section class="about-section">
+    <div class="about-box">
+      <h3>About Car Rent</h3>
+      <p>Car Rent is your trusted partner for vehicle rental. We offer a wide range of cars, motorbikes, and pickups for your convenience.</p>
+    </div>
+    <div class="about-box">
+      <h3>Contact Us</h3>
+      <div class="contact-links">
+        <a href="https://facebook.com" target="_blank">
+          <i class="fab fa-facebook"></i> Facebook
+        </a>
+        <a href="https://t.me" target="_blank">
+          <i class="fab fa-telegram"></i> Telegram
+        </a>
+      </div>
+      <div class="contact-id">ID: carrent123</div>
+    </div>
+    <div class="about-box">
+      <h3>Feedback</h3>
+      <form id="feedbackForm">
+        <input type="text" placeholder="Your Name" required><br>
+        <input type="email" placeholder="Your Email" required><br>
+        <textarea placeholder="Your Idea" required></textarea><br>
+        <button type="submit">Send</button>
+      </form>
+      <div id="feedbackMsg"></div>
+    </div>
+  </section>
+  <script>
+    // --- Responsive Menu ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    const closeMenuBtn = document.getElementById('close-menu');
+    menuToggle.onclick = function() {
+      mainNav.classList.toggle('active');
+      document.body.classList.toggle('menu-open', mainNav.classList.contains('active'));
+      if (window.innerWidth <= 600) {
+        closeMenuBtn.style.display = mainNav.classList.contains('active') ? 'block' : 'none';
+      }
+    };
+    closeMenuBtn.onclick = function() {
+      mainNav.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      closeMenuBtn.style.display = 'none';
+    };
+
+    // --- Vehicle Data & Rendering ---
+    const vehicles = [
+      // Cabriolet
+      { title: "Morning", type: "Cabriolet", group: "cabriolet", price: 15, img: "https://pimg.mk.co.kr/meet/neds/2017/11/image_readtop_2017_737080_15100338553090966.jpg", info: ["Manual", "4p", "2Bags", "Air Conditioner"] },
+      { title: "Toyota Yaris", type: "Cabriolet", group: "cabriolet", price: 28, img: "https://files.toyota.com.bh/s3fs-public/2022-09/platinum-white-pearl.png?VersionId=_Is7RpHDwdk8orEKjaVdpTwY_Vezl030", info: ["Automatic", "5p", "3Bags", "Air Conditioner"] },
+      { title: "Mazda MX-5", type: "Cabriolet", group: "cabriolet", price: 30, img: "https://media-assets.mazda.eu/image/upload/c_fill,w_1000,h_500,q_auto,f_auto/mazdaie/globalassets/cars/2024-mx-5-st/assets/cyg/mx5_st_cyg_exclusiveline_ng6vbaa_42m_rhd_1000_500.png?rnd=49221a", info: ["Manual", "2p", "1Bag", "Air Conditioner"] },
+      { title: "BMW Z4", type: "Cabriolet", group: "cabriolet", price: 30, img: "https://www.bmw.com/content/dam/bmw/common/all-models/z-series/roadster/2022/highlights/bmw-z-series-z4-roadster-ms-aerodynamic.jpg", info: ["Automatic", "2p", "2Bags", "Air Conditioner"] },
+      { title: "Audi A5", type: "Cabriolet", group: "cabriolet", price: 28, img: "https://images.dealer.com/ddc/vehicles/2025/Audi/A5/Hatchback/still/front-left/front-left-640-en_US.jpg", info: ["Automatic", "4p", "2Bags", "Air Conditioner"] },
+      { title: "Mercedes C-Class", type: "Cabriolet", group: "cabriolet", price: 32, img: "https://imgd.aeplcdn.com/1920x1080/n/cw/ec/178535/c-class-exterior-right-front-three-quarter.jpeg?isig=0&q=80&q=80", info: ["Automatic", "4p", "3Bags", "Air Conditioner"] },
+      // Pickup
+      { title: "Ford Raptor", type: "Pick Up", group: "pickup", price: 50, img: "https://buildfoc.ford.com/dig/Ford/F-150%20F-150/2025/HD-TILE/Image%5B%7CFord%7CF-150%20F-150%7C2025%7C1%7C1.%7C801A.W1R.145.PUM.LSC.88R.89B.A56AC.A5GAA.63T.A7BAE.SS5.573.68L.924.435.B3NAB.BB7AD.168.BLBAF.BLDAC.BSBAC.BSHDF.BY1AM.BY3AB.CCAB.CFFAE.CLFGP.CLMHN.64B.T7R.DEEAB.AWD.998.67T.FMLAX.413.655.GRAAP.GTAAN.GTBAB.GTDAK.HJGAX.HKCBA.HTSAA.HUKAK.IBBAB.588.50M.IEVAQ.IGDAC.J3KAG.JASAC.59S.JCBAD.77R.44G.XL4.LTC.%5D/EXT/1/vehicle.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Ford Ranger", type: "Pick Up", group: "pickup", price: 70, img: "https://www.ford.ie/content/dam/guxeu/rhd/central/cvs/all-new-ranger-2022/features/ford-ranger-eu-P703_EU_LHD_TREMOR-16x9-2160x1215.jpg.renditions.original.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Toyota Hilux", type: "Pick Up", group: "pickup", price: 55, img: "https://imgd.aeplcdn.com/1920x1080/n/cw/ec/109265/hilux-exterior-right-front-three-quarter-2.jpeg?isig=0&q=80&q=80", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Isuzu D-Max", type: "Pick Up", group: "pickup", price: 52, img: "https://www.isuzu.co.uk/wp-content/uploads/2024/05/MY24-V-Cross_Front_Red-Spinel-Mica.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Chevrolet Colorado", type: "Pick Up", group: "pickup", price: 53, img: "https://www.chevrolet.com/content/dam/chevrolet/na/us/english/vdc-collections/2025/trucks/colorado/models/01-images/lt/2024-colorado-14f43-4lt-gba-trimselector.png?imwidth=1200", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Nissan Navara", type: "Pick Up", group: "pickup", price: 54, img: "https://demo2.nissanflow.com/media/qbrn4ehk/nissan-navara-warrior-grey-pm-6c6c6c_2024.jpg", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      // SUV
+      { title: "Lexus 330", type: "SUV", group: "suv", price: 25, img: "https://platform.cstatic-images.com/in/v2/stock_photos/5692c083-e7a0-418b-a577-e5a099bd53cd/ea874387-3527-48fa-b498-d6da9167aba3.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Porsche", type: "SUV", group: "suv", price: 40, img: "https://amian-collectioncars.com/wp-content/uploads/2024/09/DSC05489-1.jpg", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Toyota Fortuner", type: "SUV", group: "suv", price: 38, img: "https://img.autocarindia.com/model/uploads/modelimages/Toyota-Fortuner-110120211829.jpg?w=750&h=500&q=90&c=1", info: ["Automatic", "7p", "5Bags", "Air Conditioner"] },
+      { title: "Honda CR-V", type: "SUV", group: "suv", price: 36, img: "https://www.greenncap.com/wp-content/uploads/honda-cr-v-2024-0188.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Mazda CX-5", type: "SUV", group: "suv", price: 34, img: "https://di-uploads-pod23.dealerinspire.com/hodgesmazda/uploads/2025/05/hodges-mazda_cx-5-colors-hvp-2025-polymetal-gray-jelly.png", info: ["Automatic", "5p", "4Bags", "Air Conditioner"] },
+      { title: "Hyundai Santa Fe", type: "SUV", group: "suv", price: 37, img: "https://s7d1.scene7.com/is/image/hyundai/2024-santa-fe-hybrid-calligraphy-fwd-terracotta-orange-hero:16-9?wid=640&hei=360&fmt=webp-alpha", info: ["Automatic", "7p", "5Bags", "Air Conditioner"] },
+      // Moto
+      { title: "Vespa", type: "Moto", group: "moto", price: 15, img: "https://images.piaggio.com/vespa/vehicles/nvh5000u03/nvh5q1tu03/nvh5q1tu03-01-m.png", info: ["Automatic"] },
+      { title: "Today", type: "Moto", group: "moto", price: 5, img: "https://global.honda/content/dam/site/global-en/newsroom-new/cq_img/news/2002/2020722/01.jpg", info: ["Automatic"] },
+      { title: "Honda Click", type: "Moto", group: "moto", price: 7, img: "https://premiumbikes.ph/wp-content/uploads/2023/02/honda-Click-125-3.png", info: ["Automatic"] },
+      { title: "Yamaha NMAX", type: "Moto", group: "moto", price: 8, img: "https://www.cycleworldmalta.com/wp-content/uploads/2019/07/2023-Yamaha-G125YM-EU-Deep_Blue-Studio-001-03.jpg", info: ["Automatic"] },
+      { title: "Suzuki Address", type: "Moto", group: "moto", price: 6, img: "https://suzukicdn.com/assets/static/img/variant/ADDRESS_PREDATOR_TITAN_BLACK_1.png", info: ["Automatic"] },
+      { title: "SYM Jet", type: "Moto", group: "moto", price: 9, img: "https://www.sym-global.com/storage/system/products/SCOOTER/01-2-JET-14-E5/50Colors/JET1450GY7547UL800700.png", info: ["Automatic"] },
+      // Van
+      { title: "Toyota Hiace", type: "Van", group: "van", price: 60, img: "https://cache3.arabwheels.ae/system/car_generation_pictures/26437/original/Cover.?1729765278", info: ["Automatic", "15p", "10Bags", "Air Conditioner"] },
+      { title: "Hyundai Starex", type: "Van", group: "van", price: 62, img: "https://assets.autobuzz.my/wp-content/uploads/2017/12/22181736/2017-Hyundai-Grand-Starex-Facelift-Debuts-in-Korea-2.jpg", info: ["Automatic", "12p", "8Bags", "Air Conditioner"] },
+      { title: "Ford Transit", type: "Van", group: "van", price: 65, img: "https://www.ford.co.uk/content/dam/guxeu/rhd/central/cvs/2023-transit-custom/launch/bodystyles/ford-transit_custom-eu-kombi-16x9-2160x1215-bodystyle-feature.jpg.renditions.original.png", info: ["Automatic", "15p", "10Bags", "Air Conditioner"] },
+      { title: "Mercedes Sprinter", type: "Van", group: "van", price: 70, img: "https://vehicle-images.dealerinspire.com/stock-images/chrome/ffa03f332de284c884241ef73fdc0cb0.png", info: ["Automatic", "15p", "12Bags", "Air Conditioner"] },
+      { title: "Nissan Urvan", type: "Van", group: "van", price: 58, img: "https://www-europe.nissan-cdn.net/content/dam/Nissan/nissan_middle_east/vehicles/urvan/configurator/URVAN-2.5-MT-13S-4DR-Microbus-H-R-EX.jpg", info: ["Automatic", "12p", "8Bags", "Air Conditioner"] },
+      { title: "Kia Grand Carnival", type: "Van", group: "van", price: 63, img: "https://humenglish.com/wp-content/uploads/2024/10/carnival-cover-1.jpg", info: ["Automatic", "11p", "7Bags", "Air Conditioner"] }
+    ];
+
+    function renderVehicles(group) {
+      const cards = document.getElementById('vehicle-cards');
+      cards.innerHTML = '';
+      vehicles.filter(v => group === 'all' || v.group === group).forEach(v => {
+        cards.innerHTML += `
+          <div class="vehicle-card">
+            <img src="${v.img}" alt="${v.title}">
+            <div class="vehicle-title">${v.title}</div>
+            <div class="vehicle-type">${v.type}</div>
+            <div class="vehicle-price">$${v.price} <span style="color:#888;font-weight:400;font-size:0.95em;">per day</span></div>
+            <div class="vehicle-info">
+              ${v.info.map(i => `<span>${i}</span>`).join('')}
+            </div>
+            <button class="view-details">Complete Information</button>
+          </div>
+        `;
+      });
+    }
+    renderVehicles('all');
+    document.querySelectorAll('.vehicle-group-btn').forEach(btn => {
+      btn.onclick = function() {
+        document.querySelectorAll('.vehicle-group-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        renderVehicles(this.dataset.group);
+      }
+    });
+
+    // --- Feedback Form ---
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+      feedbackForm.onsubmit = function(e) {
+        e.preventDefault();
+        document.getElementById('feedbackMsg').textContent = "Thank you for your feedback!";
+        feedbackForm.reset();
+      }
+    }
+
+    // --- Navbar Scroll Links ---
+    document.querySelectorAll('#main-nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const text = this.textContent.trim().toLowerCase();
+        let sectionId = '';
+        if (text === 'home') sectionId = 'hero';
+        if (text === 'cars') sectionId = 'vehicle-group-section';
+        if (text === 'pages') sectionId = 'service-section';
+        if (text === 'news') sectionId = 'rate-section';
+        if (text === 'contact us') sectionId = 'about-section';
+        if (sectionId && document.querySelector('.' + sectionId)) {
+          e.preventDefault();
+          document.querySelector('.' + sectionId).scrollIntoView({behavior: 'smooth'});
+          mainNav.classList.remove('active');
+        }
+      });
+    });
+
+    // --- Map Fullscreen Toggle ---
+    const boxMap = document.getElementById('box-map');
+    const mapFullscreenBtn = document.getElementById('map-fullscreen-btn');
+    mapFullscreenBtn.onclick = function() {
+      boxMap.classList.toggle('fullscreen');
+      this.innerHTML = boxMap.classList.contains('fullscreen')
+        ? '<i class="fas fa-compress"></i>'
+        : '<i class="fas fa-expand"></i>';
+    };
+
+    // --- Modal Logic ---
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('view-details')) {
+        e.preventDefault();
+        const card = e.target.closest('.vehicle-card');
+        const type = card ? card.querySelector('.vehicle-type')?.textContent : '';
+        document.getElementById('vehicle-type-input').value = type || '';
+        const modal = document.getElementById('detail-modal');
+        const modalContent = modal.querySelector('.modal-content');
+        modal.style.display = 'flex';
+        // Restart animation
+        modalContent.style.animation = 'none';
+        void modalContent.offsetWidth;
+        modalContent.style.animation = '';
+      }
+    });
+
+    // Close detail modal
+    document.getElementById('close-modal').onclick = function() {
+      document.getElementById('detail-modal').style.display = 'none';
+    };
+    document.getElementById('detail-modal').onclick = function(e) {
+      if (e.target === this) this.style.display = 'none';
+    };
+
+    // Gender button toggle & cancel
+    document.querySelectorAll('#detailForm .btn').forEach(btn => {
+      btn.onclick = function() {
+        if (this.textContent.trim() === 'Male' || this.textContent.trim() === 'Female') {
+          document.querySelectorAll('#detailForm .btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        }
+        if (this.textContent.trim() === 'Cancel') {
+          document.getElementById('detail-modal').style.display = 'none';
+        }
+      }
+    });
+
+    // --- File Upload Handling ---
+    let uploadedFileData = null;
+    let uploadedFileName = '';
+    document.getElementById('upload').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      uploadedFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        uploadedFileData = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+      // --- Detail Form Submission ---
+      // ...existing code...
+  document.getElementById('detailForm').onsubmit = function(e) {
+    e.preventDefault();
+
+    // Check if file is uploaded
+    if (!uploadedFileData) {
+      alert('Please upload your identification file.');
+      return;
+    }
+
+    const vehicleType = document.getElementById('vehicle-type-input').value;
+    const vehicle = vehicles.find(v => v.type === vehicleType);
+    let pricePerDay = vehicle ? vehicle.price : 0;
+
+    // Dates & days calculation
+    const dateTake = this.querySelector('[name="date_take"]').value;
+    const dateExpire = this.querySelector('[name="date_expire"]').value;
+    let days = 1;
+    if (dateTake && dateExpire) {
+      const d1 = new Date(dateTake);
+      const d2 = new Date(dateExpire);
+      days = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+    }
+    const total = pricePerDay * days;
+
+    // Gender
+    let gender = '';
+    this.querySelectorAll('.btn').forEach(btn => {
+      if (btn.classList.contains('active')) gender = btn.textContent.trim();
+    });
+
+    // Save data for receipt
+    window.lastReceiptData = {
+      first: this.querySelector('[name="first"]').value,
+      last: this.querySelector('[name="last"]').value,
+      email: this.querySelector('[name="email"]').value,
+      phone: this.querySelector('[name="phone"]').value,
+      gender,
+      date_take: dateTake,
+      date_expire: dateExpire,
+      vehicle: vehicleType,
+      total,
+      days,
+      fileData: uploadedFileData,
+      fileName: uploadedFileName
+    };
+
+    // Show price and QR
+    document.getElementById('pay-price').value = `$${total} (${days} days)`;
+    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Pay%20$${total}`;
+    document.getElementById('pay-modal').style.display = 'flex';
+    document.getElementById('detail-modal').style.display = 'none';
+  };
+
+    // --- Pay Modal Logic ---
+// ...existing code...
+    // --- Pay Modal Logic ---
+    document.getElementById('close-pay-modal').onclick = function() {
+      document.getElementById('pay-modal').style.display = 'none';
+    };
+    document.getElementById('pay-modal').onclick = function(e) {
+      if (e.target === this) this.style.display = 'none';
+    };
+    document.getElementById('show-receipt-btn').onclick = function() {
+      document.getElementById('pay-modal').style.display = 'none';
+      if (window.lastReceiptData) showReceipt(window.lastReceiptData);
+    };
+
+    // --- Receipt Modal Logic ---
+    function showReceipt(data) {
+      let fileHtml = '';
+      if (data.fileData) {
+        if (data.fileData.startsWith('data:image')) {
+          fileHtml = `<div><strong>Uploaded File:</strong><br><img src="${data.fileData}" alt="Uploaded" style="max-width:120px;max-height:120px;border-radius:8px;margin-top:6px;"></div>`;
+        } else if (data.fileData.startsWith('data:application/pdf')) {
+          fileHtml = `<div><strong>Uploaded File:</strong><br><a href="${data.fileData}" target="_blank">${data.fileName || 'View PDF'}</a></div>`;
+        } else {
+          fileHtml = `<div><strong>Uploaded File:</strong><br><a href="${data.fileData}" download="${data.fileName || 'file'}">Download</a></div>`;
+        }
+      }
+      const receipt = `
+        <strong>Name:</strong> ${data.first} ${data.last}<br>
+        <strong>Email:</strong> ${data.email}<br>
+        <strong>Phone:</strong> ${data.phone}<br>
+        <strong>Gender:</strong> ${data.gender}<br>
+        <strong>Date Take:</strong> ${data.date_take}<br>
+        <strong>Date Expire:</strong> ${data.date_expire}<br>
+        <strong>Vehicle:</strong> ${data.vehicle}<br>
+        <strong>Total Price:</strong> $${data.total} (${data.days} days)<br>
+        ${fileHtml}
+      `;
+      document.getElementById('receipt-content').innerHTML = receipt;
+      document.getElementById('receipt-modal').style.display = 'flex';
+    }
+    document.getElementById('close-receipt-modal').onclick = function() {
+      document.getElementById('receipt-modal').style.display = 'none';
+    };
+    document.getElementById('close-receipt-btn').onclick = function() {
+      document.getElementById('receipt-modal').style.display = 'none';
+    };
+// --- Dark Mode Toggle ---
+let darkMode = false;
+
+document.getElementById('theme-switch').onclick = function() {
+  darkMode = !darkMode;
+  if (darkMode) {
+    document.body.classList.add('dark-theme');
+    document.getElementById('theme-switch-label').textContent = 'Light';
+    this.querySelector('i').classList.remove('fa-moon');
+    this.querySelector('i').classList.add('fa-sun');
+  } else {
+    document.body.classList.remove('dark-theme');
+    document.getElementById('theme-switch-label').textContent = 'Dark';
+    this.querySelector('i').classList.remove('fa-sun');
+    this.querySelector('i').classList.add('fa-moon');
+  }
+  
+};
+// ...existing code...
+
+// --- Close menu when clicking outside nav (mobile) ---
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('main-nav');
+  const menuBtn = document.getElementById('menu-toggle');
+  const closeBtn = document.getElementById('close-menu');
+  if (
+    nav.classList.contains('active') &&
+    !nav.contains(e.target) &&
+    e.target !== menuBtn &&
+    e.target !== closeBtn
+  ) {
+    nav.classList.remove('active');
+    document.body.classList.remove('menu-open');
+    closeBtn.style.display = 'none';
+  }
+}, true);
+// Replace your old Download Receipt button handler with this:
+document.getElementById('close-receipt-btn').onclick = function () {
+  const receiptContent = document.getElementById('receipt-content');
+  // Clone the receipt content for rendering
+  const clone = receiptContent.cloneNode(true);
+  clone.style.background = "#fff";
+  clone.style.padding = "24px";
+  clone.style.borderRadius = "12px";
+  clone.style.width = "350px";
+  clone.style.fontFamily = "sans-serif";
+  // Hide scrollbars and position off-screen
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.style.zIndex = '-1';
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
+  // Wait for images to load before rendering
+  const images = clone.querySelectorAll('img');
+  let loaded = 0;
+  if (images.length === 0) {
+    renderCanvas();
+  } else {
+    images.forEach(img => {
+      if (img.complete) {
+        loaded++;
+        if (loaded === images.length) renderCanvas();
+      } else {
+        img.onload = img.onerror = () => {
+          loaded++;
+          if (loaded === images.length) renderCanvas();
+        };
+      }
+    });
+  }
+
+  function renderCanvas() {
+    html2canvas(clone).then(canvas => {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'receipt.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      document.body.removeChild(container);
+    });
+  }
+};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</body>
+</html>
