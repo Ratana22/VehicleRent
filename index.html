@@ -8,7 +8,683 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+SC:ital,wght@0,100..900;1,100..900&family=Battambang:wght@100;300;400;700;900&family=Dangrek&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanchenjunga:wght@400;500;600;700&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Preahvihear&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sigmar&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css">
+  <!-- <link rel="stylesheet" href="/style.css"> -->
+   <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+    }
+    .navbar {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 70px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 0 0 18px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+    .logo img {
+      height: 68px;
+    }
+    nav {
+      display: flex;
+      gap: 32px;
+    }
+    nav a {
+      color: #222;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1em;
+      transition: color 0.2s;
+      padding: 4px 0;
+      border-bottom: 2px solid transparent;
+    }
+    nav a:hover {
+      color: #6c63ff;
+      /* border-bottom: 2px solid #6c63ff; */
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2em;
+      cursor: pointer;
+    }
+    .hero {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 32px;
+    }
+    .hero-img-wrap {
+      width: 100%;
+      max-height: 340px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 0 0 24px 24px;
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      object-fit: cover;
+      min-height: 260px;
+      max-height: 340px;
+      display: block;
+      filter: brightness(0.85);
+    }
+    .hero-content {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      max-width: 420px;
+      background: rgba(44, 44, 60, 0.28);
+      padding: 28px 32px 24px 32px;
+      border-radius: 18px;
+      backdrop-filter: blur(2px);
+    }
+    .hero-content h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: bold;
+      line-height: 1.15;
+    }
+    .hero-content p {
+      font-size: 1.15em;
+      margin-bottom: 0;
+      color: #e0e0e0;
+    }
+    .hero-content .highlight {
+      color: #6c63ff;
+      font-weight: bold;
+      text-shadow: none;
+    }
+    .vehicle-group-section {
+      background: #fff;
+      margin: 0 auto;
+      margin-top: -40px;
+      border-radius: 24px;
+      max-width: 1200px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      padding: 40px 32px 24px 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .vehicle-group-section h2 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 32px;
+      font-weight: bold;
+      color: #23233a;
+      letter-spacing: 0.5px;
+    }
+    .vehicle-groups {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .vehicle-group-btn {
+      background: #f5f8fc;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 22px;
+      font-size: 1em;
+      font-weight: 500;
+      color: #222;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(108,99,255,0.04);
+    }
+    .vehicle-group-btn.active, .vehicle-group-btn:hover {
+      background: #6c63ff;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(108,99,255,0.12);
+    }
+    .vehicle-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+    .vehicle-card {
+      background: #f9faff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(108,99,255,0.06);
+      padding: 28px 18px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      border: 1.5px solid #f0f0ff;
+      min-height: 33%;
+    }
+    .vehicle-card:hover {
+      box-shadow: 0 8px 32px rgba(108,99,255,0.13);
+      transform: translateY(-4px) scale(1.025);
+      border: 1.5px solid #6c63ff22;
+    }
+    .vehicle-card img {
+      width: 100%;
+      max-width: 160px;
+      height: 90px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(108,99,255,0.04);
+    }
+    .vehicle-card .vehicle-title {
+      font-size: 1.13em;
+      font-weight: bold;
+      margin-bottom: 2px;
+      text-align: center;
+      color: #23233a;
+      letter-spacing: 0.2px;
+    }
+    .vehicle-card .vehicle-type {
+      font-size: 0.98em;
+      color: #888;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .vehicle-card .vehicle-price {
+      color: #6c63ff;
+      font-weight: bold;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .vehicle-card .vehicle-info {
+      display: flex;
+      gap: 10px;
+      font-size: 0.97em;
+      color: #666;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .vehicle-card .view-details {
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 0;
+      width: 100%;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: auto;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+      letter-spacing: 0.2px;
+    }
+    .vehicle-card .view-details:hover {
+      background: #554fd8;
+      box-shadow: 0 4px 16px rgba(108,99,255,0.18);
+    }
+    .service-section, .rate-section, .about-section {
+      max-width: 1100px;
+      margin: 40px auto;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .service-box, .rate-customer, .about-box {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(108,99,255,0.06);
+      padding: 28px 18px 20px 18px;
+      min-width: 220px;
+      flex: 1 1 250px;
+      text-align: center;
+    }
+    .service-box:hover {
+      transform: scale(1.05);
+    }
+    .rate-section {
+      flex-direction: column;
+      align-items: center;
+    }
+    .rate-box {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .stars {
+      color: #f7b731;
+      font-size: 1.3em;
+      margin: 6px 0;
+    }
+    .about-box form input, .about-box form textarea {
+      width: 90%;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 1em;
+    }
+    .about-box form button {
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 24px;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    .about-box form button:hover {
+      background: #554fd8;
+    }
+    .about-box .contact-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .about-box .contact-links a:hover {
+      color: #6c63ff;
+    }
+    .about-box .contact-links .fa-facebook {
+      color: #3b5998;
+      font-size: 1.3em;
+    }
+    .about-box .contact-links .fa-telegram {
+      color: #229ed9;
+      font-size: 1.3em;
+    }
+    .about-box .contact-id {
+      margin-top: 6px;
+      color: #444;
+      font-size: 1em;
+      font-weight: 400;
+    }
+    .about-box .contact-links a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1em;
+      text-decoration: none;
+      color: #23233a;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    #feedbackMsg {
+      color: #6c63ff;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    .box-map {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(108,99,255,0.06);
+      padding: 0;
+      margin: 32px auto;
+      max-width: 800px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .box-map .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: #f4f6fb;
+      font-weight: bold;
+      font-size: 1.1em;
+      border-bottom: 1px solid #eee;
+    }
+    .box-map .map-header button {
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      color: #6c63ff;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .box-map .map-header button:hover {
+      background: #ecebff;
+    }
+    .box-map .map-embed {
+      width: 100%;
+      height: 300px;
+      transition: height 0.3s;
+    }
+    .box-map .map-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      border-radius: 0 0 16px 16px;
+    }
+    .box-map.fullscreen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+      z-index: 9999;
+      border-radius: 0;
+      margin: 0;
+    }
+    .box-map.fullscreen .map-embed {
+      height: calc(100vh - 48px);
+    }
+    .box-map.fullscreen .map-header {
+      border-radius: 0;
+    }
+    .modal {
+      position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+      font-family: Kantumruy Pro;
+    }
+    .modal-content {
+      background: #fff; padding: 24px 18px 18px 18px; border-radius: 12px; max-width: 400px; width: 93%; position: relative;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+      font-family: Kantumruy Pro;
+      animation: popupIn 0.35s cubic-bezier(.77,0,.18,1);
+    }
+    .close-modal {
+      font-family: Kantumruy Pro;
+      position: absolute; top: 10px; right: 18px; font-size: 1.7em; color: #888; cursor: pointer;
+    }
+    .btn {
+      border: 1px solid #6c63ff; background: #fff; color: #6c63ff; border-radius: 6px; padding: 8px 0; font-size: 1em; cursor: pointer; font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+      font-family: Kantumruy Pro;
+    }
+    .btn:hover, .btn.active {
+      background: #6c63ff; color: #fff;
+    }
+    @media (max-width: 600px) {
+      .box-map {
+        max-width: 100vw;
+        margin: 16px 0;
+      }
+      .box-map .map-embed {
+        height: 220px;
+      }
+      /* .modal-content{
+        width: 90;
+      } */
+       
+       .detail-modal{
+        width: 90%;
+        border-radius: 20px;
+       }
+    }
+    @media (max-width: 900px) {
+      .vehicle-group-section, .service-section, .rate-section, .about-section {
+        padding: 18px 4vw 8px 4vw;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+      .vehicle-cards {
+        gap: 16px;
+      }
+      .vehicle-card, .service-box, .rate-customer, .about-box {
+        width: 90%;
+        min-width: 0;
+      }
+      .hero-img-wrap img {
+        min-height: 180px;
+        max-height: 220px;
+      }
+      .hero-content {
+        left: 10vw;
+        top: 18px;
+        max-width: 70vw;
+        padding: 18px 16px 14px 16px;
+      }
+    }
+    @media (max-width: 600px) {
+    body.dark-theme .about-box a{
+        color: #6c63ff !important;
+        }
+      .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: auto;
+        padding: 0 8px;
+        gap: 8px;
+        border-radius: 0 0 12px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+      }
+      .logo {
+        flex: 1;
+      }
+      .menu-toggle {
+        display: block;
+        order: 2;
+        margin-left: auto;
+        z-index: -21;
+      }
+      nav {
+        flex-direction: column;
+        gap: 10px;
+        width: 60vw;
+        max-width: 320px;
+        align-items: flex-start;
+        display: flex;
+        background: #ffffff;
+        position: fixed;
+        top: 0px;
+        right: -100vw;
+        height: 100vh;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.10);
+        border-radius: 0 0 12px 12px;
+        z-index: 2;
+        padding: 80px 24px 24px 24px;
+        transition: right 0.35s cubic-bezier(.77,0,.18,1);
+      }
+      nav.active {
+        right: 0;
+      }
+      body.menu-open {
+        overflow: hidden;
+      }
+      .hero-content {
+        left: 4vw;
+        top: 10px;
+        max-width: 92vw;
+        padding: 12px 8px 8px 8px;
+      }
+      .vehicle-group-section {
+        margin-top: -20px;
+        padding: 10px 2vw 8px 2vw;
+        border-radius: 14px;
+        
+      }
+      .vehicle-cards {
+        gap: 12px;
+        margin-left: 25px;
+      }
+      .vehicle-card {
+        min-height: 260px;
+        padding: 16px 6px 12px 6px;
+      }
+    }
+    @keyframes popupIn {
+      0% {
+        transform: scale(0.85) translateY(40px);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+    .btn-login{
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      /* padding: 8px ; */
+      /* font-weight: 600; */
+      width: 120px;
+      height: 34px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    /* ====== DARK THEME ====== */
+body.dark-theme {
+  background: #181818;
+  color: #f4f4f4;
+}
+body.dark-theme .navbar,
+body.dark-theme .vehicle-group-section,
+body.dark-theme .service-section,
+body.dark-theme .rate-section,
+body.dark-theme .about-section,
+body.dark-theme .box-map,
+body.dark-theme .modal-content {
+  background: #23233a !important;
+  color: #f4f4f4 !important;
+}
+body.dark-theme .vehicle-group-section h2 {
+  color: white;
+}
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background: #23233a !important;
+  color: #f4f4f4 !important;
+  border-color: #444 !important;
+}
+body.dark-theme .btn {
+  background: #23233a;
+  color: #fff;
+  border-color: #6c63ff;
+}
+body.dark-theme .btn.active,
+body.dark-theme .btn:hover {
+  background: #6c63ff;
+  color: #fff;
+}
+body.dark-theme .vehicle-card {
+  background: #23233a;
+  color: #f4f4f4;
+  border-color: #444;
+}
+body.dark-theme nav a {
+  color: #f4f4f4;
+}
+body.dark-theme nav a:hover {
+  color: #6c63ff;
+}
+body.dark-theme .vehicle-title,
+body.dark-theme .vehicle-type,
+body.dark-theme .vehicle-price,
+body.dark-theme .vehicle-info span,
+body.dark-theme .rate-customer,
+body.dark-theme .about-box,
+body.dark-theme .service-box,
+body.dark-theme .rate-section h2,
+body.dark-theme .about-section h3,
+body.dark-theme .modal-content,
+body.dark-theme .contact-links a,
+body.dark-theme .contact-id {
+  color: #f4f4f4 !important;
+}
+body.dark-theme .vehicle-group-btn {
+  background: #181818 !important;
+  color: #f4f4f4 !important;
+  border: 1px solid #444 !important;
+}
+body.dark-theme .vehicle-group-btn.active,
+body.dark-theme .vehicle-group-btn:hover {
+  background: #6c63ff !important;
+  color: #fff !important;
+}
+body.dark-theme .box-map,
+body.dark-theme .map-header {
+  background: #23233a !important;
+  color: #f4f4f4 !important;
+}
+body.dark-theme .hero-content {
+  background: rgba(44, 44, 60, 0.7) !important;
+  color: #fff !important;
+}
+body.dark-theme .rate-customer p,
+body.dark-theme .rate-customer strong {
+  color: #f4f4f4 !important;
+}
+body.about-box .service-box h3,p{
+    /* background: #6c63ff !important; */
+  color: #000000 !important;
+}
+body.about-box .service-box p ,h3{
+    /* background: #6c63ff !important; */
+  color: #000000 !important;
+}
+body.dark-theme .about-box form input,
+body.dark-theme .about-box form textarea {
+  background: #6c63ff !important;
+  color: #fffefe !important;
+  border-color: #f7f7f7 !important;
+}
+body.dark-theme .about-box form input ::placeholder{
+    color: #f4f4f4 !important;
+}
+body.dark-theme .about-box h3{
+    color: #000000 !important;
+}
+body.dark-theme .about-box a{
+    color: #6c63ff !important;
+}
+body.dark-theme .about-box .contact-id {
+  color: #767676 !important;
+}
+body.dark-theme .about-box .contact-links a {
+  color: #f4f4f4 !important;
+}
+body.dark-theme .rate-box strong{
+  /* background: #23233a !important; */
+  color: #000000 !important;
+}
+body.dark-theme .rate-box p{
+  /* background: #23233a !important; */
+  color: #000000 !important;
+}
+body.dark-theme .hero-content p{
+  color: #e20000;
+}
+body.dark-theme .active{
+  background: #393680 !important;
+}
+body.dark-theme .fas{
+  color: white;
+}
+   </style>
 </head>
 <body>
   <!-- Receipt Modal -->
